@@ -1,19 +1,21 @@
 {
   "name": "reign-challenge",
-  "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vite-jest",
-    "test:watch": "vite-jest --watch"
+    "test:watch": "vite-jest --watch",
+    "prepare": "husky install"
   },
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^16.1.0",
+    "@commitlint/config-conventional": "^16.0.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -21,11 +23,20 @@
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "@vitejs/plugin-react": "^1.0.7",
+    "cz-conventional-changelog": "3.3.0",
+    "husky": "^4.2.5",
     "jest": "^27.4.7",
     "jest-environment-jsdom": "^27.4.6",
+    "lint-staged": "^12.2.2",
+    "prettier": "^2.5.1",
     "ts-jest": "^27.1.3",
     "typescript": "^4.4.4",
     "vite": "^2.7.2",
     "vite-jest": "^0.1.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
