@@ -18,6 +18,8 @@
   --card-mobile-padding: 10px;
   /* Bigger for better mobile experience  */
   --card-mobile-height: 120px;
+  --dropdown-width: 240px;
+  --dropdown-height: 32px;
 
   /* Color Tokens */
   --background-color: #fcfcfc;
