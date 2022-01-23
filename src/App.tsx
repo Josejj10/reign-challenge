@@ -11,11 +11,19 @@ import {
 } from "./constants/dropdown.constants";
 import Tabs from "./components/Tabs/Tabs";
 import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
-import { StorageService } from "./services/storage.service";
 
 function App() {
   // Use News Facade
-  const { loadNews, error, loading, news } = useNews();
+  const {
+    loadNews,
+    getFilters,
+    error,
+    loading,
+    loadingFilters,
+    news,
+    page,
+    query: initialQuery,
+  } = useNews();
 
   // =========
   // State
@@ -32,11 +40,15 @@ function App() {
 
   // Filters state
   const [query, setQuery] = useState(EDropdownOptions.ANGULAR);
-  const [page, setPage] = useState(0);
 
   // =========
   // Effects
   // =========
+
+  // Effect: Get filters when component is rendered
+  useEffect(() => {
+    getFilters();
+  }, [getFilters]);
 
   // Effect: Load news whenever page or query changes
   useEffect(() => {

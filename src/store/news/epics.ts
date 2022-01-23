@@ -3,7 +3,10 @@ import { isActionOf } from "typesafe-actions";
 import { from, Observable, of } from "rxjs";
 import { newsLoadAction } from "./actions/load.actions";
 import { NewsService } from "../../services/news.service";
+import { newsSetFiltersAction } from "./actions/set-filters";
+import { newsGetFiltersAction } from "./actions/get-filters";
 
+// Load news asynchronously
 export const newsLoadEpic = (action$: Observable<any>) =>
   action$.pipe(
     filter(isActionOf(newsLoadAction.request)),
@@ -11,6 +14,28 @@ export const newsLoadEpic = (action$: Observable<any>) =>
       from(NewsService.getNews(payload)).pipe(
         map(newsLoadAction.success),
         catchError((error) => of(newsLoadAction.failure(error)))
+      )
+    )
+  );
+
+// Set filters in local storage
+export const newsLoadSuccessEpic = (action$: Observable<any>) =>
+  action$.pipe(
+    filter(isActionOf(newsLoadAction.request)),
+    map(({ payload }) => {
+      NewsService.saveFilters(payload);
+      return newsSetFiltersAction(payload);
+    })
+  );
+
+// Get filters from local storage to store
+export const newsGetFiltersEpic = (action$: Observable<any>) =>
+  action$.pipe(
+    filter(isActionOf(newsGetFiltersAction.request)),
+    switchMap(() =>
+      from(NewsService.getFilters()).pipe(
+        map(newsGetFiltersAction.success),
+        catchError((error) => of(newsGetFiltersAction.failure(error)))
       )
     )
   );

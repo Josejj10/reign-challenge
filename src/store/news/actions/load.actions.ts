@@ -1,11 +1,11 @@
 import { createAsyncAction, createReducer } from "typesafe-actions";
 import { NewsModel } from "../../../models";
-import { RoleActionTypes, newsInitialState } from "../types";
+import { NewsActionTypes, newsInitialState } from "../types";
 
 export const newsLoadAction = createAsyncAction(
-  RoleActionTypes.LOAD_NEWS,
-  RoleActionTypes.LOAD_NEWS_SUCCESS,
-  RoleActionTypes.LOAD_NEWS_FAIL
+  NewsActionTypes.LOAD_NEWS,
+  NewsActionTypes.LOAD_NEWS_SUCCESS,
+  NewsActionTypes.LOAD_NEWS_FAIL
 )<{ query: string; page: number }, NewsModel[], any>();
 
 export const newsLoadReducer = createReducer(newsInitialState)

@@ -1,5 +1,5 @@
 export class StorageService {
-  // This service   so it can be reused
+  // This service is generic so it can be reused
 
   static set = (name: string, value: any): Promise<void> => {
     return Promise.resolve().then(() => {
