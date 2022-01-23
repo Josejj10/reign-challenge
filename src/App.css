@@ -40,14 +40,9 @@ main {
   width: 100%;
   max-width: 1440px;
   margin: auto;
-  grid-template-rows: 0.5fr 1fr minmax(450px, auto) 1fr;
+  grid-template-rows: 0.5fr 108px minmax(450px, auto) 1fr;
   grid-template-columns: 1fr;
   padding: 0 var(--lateral-margin);
-}
-
-/* When favorites, hide one row  */
-.main__content-favorites {
-  grid-template-rows: 0.5fr minmax(450px, 100%) 1fr;
 }
 
 .main__content > div {

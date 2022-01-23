@@ -1,0 +1,36 @@
+.Tabs {
+  display: flex;
+  width: fit-content;
+  user-select: none;
+}
+
+.Tabs__option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 98px;
+  padding: 5px 0;
+  border: 1px solid var(--border-color-light);
+  border-radius: 0;
+  list-style: none;
+  color: var(--text-color-tab);
+  font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.Tabs__option:first-of-type {
+  border-right: 0;
+  border-radius: 2px 0 0 2px;
+}
+
+.Tabs__option:last-of-type {
+  border-left: 1px solid var(--border-color-light);
+  border-radius: 0 2px 2px 0;
+}
+
+.Tabs__option-selected {
+  border-color: var(--border-color-selected);
+  color: var(--text-color-selected-tab);
+}
