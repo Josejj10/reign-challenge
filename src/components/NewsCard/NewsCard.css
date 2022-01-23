@@ -1,0 +1,87 @@
+/* Mobile first */
+
+.NewsCard {
+  display: flex;
+  height: var(--card-mobile-height);
+  border: solid 1px var(--border-color);
+  border-radius: var(--card-border-radius);
+  background-color: var(--foreground-color);
+}
+
+.NewsCard:hover > * {
+  opacity: 0.4;
+}
+
+.NewsCard__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--card-mobile-padding);
+  flex: 1;
+  text-decoration: none;
+}
+
+.NewsCard__content p {
+  /* This has the potential to be a mixin in SASS */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin: 0;
+  color: var(--text-color-list);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.43;
+  letter-spacing: 0.25px;
+}
+
+.NewsCard__content-time {
+  margin: 0;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+}
+
+.NewsCard__content-time svg {
+  margin-right: 8px;
+}
+
+.NewsCard__content-time span {
+  margin: 0;
+  color: var(--text-color-date);
+  font-size: 11px;
+}
+
+.NewsCard__favorite {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: var(--card-favorite-size);
+  border-radius: 0 var(--card-border-radius) var(--card-border-radius) 0;
+  user-select: none;
+  background-color: var(--foreground-color-light);
+  justify-self: flex-end;
+}
+
+.NewsCard__favorite svg {
+  transition: 0.25s ease-out;
+}
+
+.NewsCard__favorite svg:hover {
+  cursor: pointer;
+  transform: scale(1.2);
+}
+
+/* For desktop: */
+@media only screen and (min-width: 768px) {
+  .NewsCard {
+    height: var(--card-height);
+  }
+
+  .NewsCard__content {
+    padding-left: var(--card-padding-left);
+    padding-right: var(--card-padding-right);
+  }
+}
