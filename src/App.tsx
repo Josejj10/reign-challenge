@@ -5,9 +5,13 @@ import { INewsCardProps } from "./components/NewsCard/NewsCard";
 import NewsList from "./components/NewsList/NewsList";
 import { useNews } from "./store";
 import { NewsModel } from "./models";
-import { dropdownOptionList } from "./constants/dropdown.constants";
+import {
+  dropdownOptionList,
+  EDropdownOptions,
+} from "./constants/dropdown.constants";
 import Tabs from "./components/Tabs/Tabs";
 import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
+import { StorageService } from "./services/storage.service";
 
 function App() {
   // Use News Facade
@@ -27,7 +31,7 @@ function App() {
   );
 
   // Filters state
-  const [query, setQuery] = useState("angular");
+  const [query, setQuery] = useState(EDropdownOptions.ANGULAR);
   const [page, setPage] = useState(0);
 
   // =========
@@ -67,7 +71,7 @@ function App() {
   // ===========
   // Functions
   // ===========
-  const onChangeQuery = (value: string) => {
+  const onChangeQuery = (value: EDropdownOptions) => {
     setQuery(value);
   };
 
