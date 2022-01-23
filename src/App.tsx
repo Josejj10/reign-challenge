@@ -5,13 +5,26 @@ import { INewsCardProps } from "./components/NewsCard/NewsCard";
 import NewsList from "./components/NewsList/NewsList";
 import { useNews } from "./store";
 import { NewsModel } from "./models";
-import { dropdownOptionList } from "./constants/dropdown.constants";
+import {
+  dropdownOptionList,
+  EDropdownOptions,
+} from "./constants/dropdown.constants";
 import Tabs from "./components/Tabs/Tabs";
 import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
 
 function App() {
   // Use News Facade
-  const { loadNews, error, loading, news } = useNews();
+  const {
+    loadNews,
+    getFilters,
+    setFilters,
+    error,
+    loading,
+    loadingFilters,
+    news,
+    page,
+    query,
+  } = useNews();
 
   // =========
   // State
@@ -26,17 +39,25 @@ function App() {
     [selectedTab]
   );
 
-  // Filters state
-  const [query, setQuery] = useState("angular");
-  const [page, setPage] = useState(0);
-
   // =========
   // Effects
   // =========
 
-  // Effect: Load news whenever page or query changes
+  // Effect: Log if error
   useEffect(() => {
-    loadNews({ page, query });
+    if (error) console.log(error);
+  }, [error]);
+
+  // Effect: Get filters when component is rendered
+  useEffect(() => {
+    getFilters();
+  }, [getFilters]);
+
+  // Effect: Set filters whenever page or query changes
+  // so this effect will go after getFilters finishes and
+  // retrieves them from Local Storage
+  useEffect(() => {
+    if (query) setFilters({ page, query });
   }, [loadNews, page, query]);
 
   // Effect: Set newsList object
@@ -67,8 +88,11 @@ function App() {
   // ===========
   // Functions
   // ===========
-  const onChangeQuery = (value: string) => {
-    setQuery(value);
+
+  // Set in Local Storage and then call the API
+  // (see: newsSetFiltersEpic)
+  const onChangeQuery = (value: EDropdownOptions) => {
+    if (query) setFilters({ page, query: value });
   };
 
   const onChangeTab = (value: ETabOptions) => {
@@ -83,38 +107,42 @@ function App() {
         </div>
       </header>
       <main>
-        <div
-          className={`main__content ${
-            viewFavorites ? " main__content-favorites" : ""
-          }`}
-        >
-          <div className="main__content-tabs">
-            <Tabs
-              list={tabsOptionList}
-              selectedValue={selectedTab}
-              onChange={onChangeTab}
-            />
-          </div>
-          <div className="main__content-dropdown">
-            {!viewFavorites && (
-              <Dropdown
-                list={dropdownOptionList}
-                selectedValue={query}
-                onChange={onChangeQuery}
+        {loadingFilters ? (
+          <div>Loading filters...</div>
+        ) : (
+          <div
+            className={`main__content ${
+              viewFavorites ? " main__content-favorites" : ""
+            }`}
+          >
+            <div className="main__content-tabs">
+              <Tabs
+                list={tabsOptionList}
+                selectedValue={selectedTab}
+                onChange={onChangeTab}
               />
-            )}
+            </div>
+            <div className="main__content-dropdown">
+              {!viewFavorites && (
+                <Dropdown
+                  list={dropdownOptionList}
+                  selectedValue={query}
+                  onChange={onChangeQuery}
+                />
+              )}
+            </div>
+            <div className="main__content-list">
+              {!loading ? (
+                <NewsList list={newsList} />
+              ) : (
+                <div>TODO add loading spinner...</div>
+              )}
+            </div>
+            <div className="main__content-pagination">
+              <div>Pagination</div>
+            </div>
           </div>
-          <div className="main__content-list">
-            {!loading ? (
-              <NewsList list={newsList} />
-            ) : (
-              <div>TODO add loading spinner...</div>
-            )}
-          </div>
-          <div className="main__content-pagination">
-            <div>Pagination</div>
-          </div>
-        </div>
+        )}
       </main>
     </div>
   );

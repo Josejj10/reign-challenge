@@ -3,13 +3,16 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ChevronDownSvg from "../../assets/chevron-down.svg?component";
 // @ts-ignore
 import ChevronUpSvg from "../../assets/chevron-up.svg?component";
-import { IDropdownOption } from "../../constants/dropdown.constants";
+import {
+  EDropdownOptions,
+  IDropdownOption,
+} from "../../constants/dropdown.constants";
 import "./Dropdown.css";
 
 export interface IDropdownProps {
   list: IDropdownOption[];
-  selectedValue: string;
-  onChange: (value: string) => void;
+  selectedValue: EDropdownOptions | string;
+  onChange: (value: EDropdownOptions) => void;
 }
 
 const Dropdown = ({ list, onChange, selectedValue }: IDropdownProps) => {
@@ -20,7 +23,7 @@ const Dropdown = ({ list, onChange, selectedValue }: IDropdownProps) => {
     setIsOpen((current) => !current);
   };
 
-  const onSelectOption = (value: string) => {
+  const onSelectOption = (value: EDropdownOptions) => {
     onChange(value);
     toggleList();
   };
