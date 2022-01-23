@@ -3,16 +3,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import ChevronDownSvg from "../../assets/chevron-down.svg?component";
 // @ts-ignore
 import ChevronUpSvg from "../../assets/chevron-up.svg?component";
+import { IDropdownOption } from "../../constants/dropdown.constants";
 import "./Dropdown.css";
 
-export interface IOption {
-  value: string;
-  label: string;
-  icon: string;
-}
-
 export interface IDropdownProps {
-  list: IOption[];
+  list: IDropdownOption[];
   selectedValue: string;
   onChange: (value: string) => void;
 }
@@ -55,7 +50,7 @@ const Dropdown = ({ list, onChange, selectedValue }: IDropdownProps) => {
   // Memoization to find option using currentValue
   const selectedOption = useMemo(() => {
     const option = list.find(
-      (option: IOption) => option.value === selectedValue
+      (option: IDropdownOption) => option.value === selectedValue
     );
     if (option) return option;
     // If no option with the current value found in list
@@ -79,7 +74,7 @@ const Dropdown = ({ list, onChange, selectedValue }: IDropdownProps) => {
         <div className="Dropdown__list-container">
           <ul className="Dropdown__list">
             {list &&
-              list.map((option: IOption) => (
+              list.map((option: IDropdownOption) => (
                 <li
                   className="Dropdown__option"
                   onClick={() => onSelectOption(option.value)}

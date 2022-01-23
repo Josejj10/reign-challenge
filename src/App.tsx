@@ -1,31 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import Dropdown, { IOption } from "./components/Dropdown/Dropdown";
+import Dropdown from "./components/Dropdown/Dropdown";
 import { INewsCardProps } from "./components/NewsCard/NewsCard";
 import NewsList from "./components/NewsList/NewsList";
 import { useNews } from "./store";
-import AngularImage from "./assets/angular.png";
-import ReactImage from "./assets/react.png";
-import VueImage from "./assets/vue.png";
 import { NewsModel } from "./models";
-
-const dropdownOptionList: IOption[] = [
-  {
-    icon: AngularImage,
-    label: "Angular",
-    value: "angular",
-  },
-  {
-    icon: ReactImage,
-    label: "Reactjs",
-    value: "reactjs",
-  },
-  {
-    icon: VueImage,
-    label: "Vuejs",
-    value: "vuejs",
-  },
-];
+import { dropdownOptionList } from "./constants/dropdown.constants";
+import Tabs from "./components/Tabs/Tabs";
+import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
 
 function App() {
   // Use News Facade
@@ -36,8 +18,13 @@ function App() {
   // =========
 
   // Component State
-  const [viewFavorites, setViewFavorites] = useState(false);
   const [newsList, setNewsList] = useState<INewsCardProps[]>([]);
+  const [selectedTab, setSelectedTab] = useState(ETabOptions.ALL);
+  // Memoize view favorites to change when selected tab changes
+  const viewFavorites = useMemo(
+    () => selectedTab === ETabOptions.FAVORITES,
+    [selectedTab]
+  );
 
   // Filters state
   const [query, setQuery] = useState("angular");
@@ -84,6 +71,10 @@ function App() {
     setQuery(value);
   };
 
+  const onChangeTab = (value: ETabOptions) => {
+    setSelectedTab(value);
+  };
+
   return (
     <div className="App">
       <header>
@@ -98,17 +89,21 @@ function App() {
           }`}
         >
           <div className="main__content-tabs">
-            <div>Tabs</div>
+            <Tabs
+              list={tabsOptionList}
+              selectedValue={selectedTab}
+              onChange={onChangeTab}
+            />
           </div>
-          {!viewFavorites && (
-            <div className="main__content-dropdown">
+          <div className="main__content-dropdown">
+            {!viewFavorites && (
               <Dropdown
                 list={dropdownOptionList}
                 selectedValue={query}
                 onChange={onChangeQuery}
               />
-            </div>
-          )}
+            )}
+          </div>
           <div className="main__content-list">
             {!loading ? (
               <NewsList list={newsList} />
