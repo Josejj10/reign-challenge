@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { NewsModel } from "../../models";
 import "./NewsList.css";
 
 export interface INewsListProps {
-  list: any[];
+  list: NewsModel[];
 }
 
 const NewsList = ({ list }: INewsListProps) => {
@@ -10,7 +11,16 @@ const NewsList = ({ list }: INewsListProps) => {
     <div className="NewsList">
       {list &&
         list.length > 0 &&
-        list.map(() => <div className="NewsCard">News Card</div>)}
+        list.map((news: NewsModel) => (
+          <div className="NewsCard" key={news.id}>
+            <div>
+              {news.created_at} by {news.author}
+            </div>
+            <a target="_blank" rel="noreferrer" href={news.story_url}>
+              {news.story_title}
+            </a>
+          </div>
+        ))}
     </div>
   );
 };
