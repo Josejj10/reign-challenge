@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { NewsModel } from "../../models";
+import NewsCard, { INewsCardProps } from "../NewsCard/NewsCard";
 import "./NewsList.css";
 
 export interface INewsListProps {
-  list: NewsModel[];
+  list: INewsCardProps[];
 }
 
 const NewsList = ({ list }: INewsListProps) => {
@@ -11,15 +11,8 @@ const NewsList = ({ list }: INewsListProps) => {
     <div className="NewsList">
       {list &&
         list.length > 0 &&
-        list.map((news: NewsModel) => (
-          <div className="NewsCard" key={news.id}>
-            <div>
-              {news.created_at} by {news.author}
-            </div>
-            <a target="_blank" rel="noreferrer" href={news.story_url}>
-              {news.story_title}
-            </a>
-          </div>
+        list.map(({ news, favorite }: INewsCardProps) => (
+          <NewsCard key={news.id} news={news} favorite={favorite} />
         ))}
     </div>
   );

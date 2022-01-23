@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import { INewsCardProps } from "./components/NewsCard/NewsCard";
 import NewsList from "./components/NewsList/NewsList";
 import { NewsModel } from "./models";
 import { useNews } from "./store";
@@ -14,7 +15,7 @@ function App() {
 
   // Component State
   const [viewFavorites, setViewFavorites] = useState(false);
-  const [newsList, setNewsList] = useState<NewsModel[]>([]);
+  const [newsList, setNewsList] = useState<INewsCardProps[]>([]);
 
   // Filters state
   const [query, setQuery] = useState("angular");
@@ -36,7 +37,11 @@ function App() {
 
   useEffect(() => {
     // Just in case the API returns more, slice the first 8 elements
-    setNewsList(news.slice(0, 8));
+    setNewsList(
+      news.slice(0, 8).map((newsData) => {
+        return { news: newsData, favorite: false };
+      })
+    );
   }, [news]);
 
   return (
