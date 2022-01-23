@@ -17,12 +17,13 @@ function App() {
   const {
     loadNews,
     getFilters,
+    setFilters,
     error,
     loading,
     loadingFilters,
     news,
     page,
-    query: initialQuery,
+    query,
   } = useNews();
 
   // =========
@@ -38,21 +39,25 @@ function App() {
     [selectedTab]
   );
 
-  // Filters state
-  const [query, setQuery] = useState(EDropdownOptions.ANGULAR);
-
   // =========
   // Effects
   // =========
+
+  // Effect: Log if error
+  useEffect(() => {
+    if (error) console.log(error);
+  }, [error]);
 
   // Effect: Get filters when component is rendered
   useEffect(() => {
     getFilters();
   }, [getFilters]);
 
-  // Effect: Load news whenever page or query changes
+  // Effect: Set filters whenever page or query changes
+  // so this effect will go after getFilters finishes and
+  // retrieves them from Local Storage
   useEffect(() => {
-    loadNews({ page, query });
+    if (query) setFilters({ page, query });
   }, [loadNews, page, query]);
 
   // Effect: Set newsList object
@@ -83,8 +88,11 @@ function App() {
   // ===========
   // Functions
   // ===========
+
+  // Set in Local Storage and then call the API
+  // (see: newsSetFiltersEpic)
   const onChangeQuery = (value: EDropdownOptions) => {
-    setQuery(value);
+    if (query) setFilters({ page, query: value });
   };
 
   const onChangeTab = (value: ETabOptions) => {
@@ -99,38 +107,42 @@ function App() {
         </div>
       </header>
       <main>
-        <div
-          className={`main__content ${
-            viewFavorites ? " main__content-favorites" : ""
-          }`}
-        >
-          <div className="main__content-tabs">
-            <Tabs
-              list={tabsOptionList}
-              selectedValue={selectedTab}
-              onChange={onChangeTab}
-            />
-          </div>
-          <div className="main__content-dropdown">
-            {!viewFavorites && (
-              <Dropdown
-                list={dropdownOptionList}
-                selectedValue={query}
-                onChange={onChangeQuery}
+        {loadingFilters ? (
+          <div>Loading filters...</div>
+        ) : (
+          <div
+            className={`main__content ${
+              viewFavorites ? " main__content-favorites" : ""
+            }`}
+          >
+            <div className="main__content-tabs">
+              <Tabs
+                list={tabsOptionList}
+                selectedValue={selectedTab}
+                onChange={onChangeTab}
               />
-            )}
+            </div>
+            <div className="main__content-dropdown">
+              {!viewFavorites && (
+                <Dropdown
+                  list={dropdownOptionList}
+                  selectedValue={query}
+                  onChange={onChangeQuery}
+                />
+              )}
+            </div>
+            <div className="main__content-list">
+              {!loading ? (
+                <NewsList list={newsList} />
+              ) : (
+                <div>TODO add loading spinner...</div>
+              )}
+            </div>
+            <div className="main__content-pagination">
+              <div>Pagination</div>
+            </div>
           </div>
-          <div className="main__content-list">
-            {!loading ? (
-              <NewsList list={newsList} />
-            ) : (
-              <div>TODO add loading spinner...</div>
-            )}
-          </div>
-          <div className="main__content-pagination">
-            <div>Pagination</div>
-          </div>
-        </div>
+        )}
       </main>
     </div>
   );

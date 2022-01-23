@@ -11,7 +11,7 @@ import "./Dropdown.css";
 
 export interface IDropdownProps {
   list: IDropdownOption[];
-  selectedValue: EDropdownOptions;
+  selectedValue: EDropdownOptions | string;
   onChange: (value: EDropdownOptions) => void;
 }
 

@@ -6,7 +6,7 @@ import { NewsService } from "../../services/news.service";
 import { newsSetFiltersAction } from "./actions/set-filters";
 import { newsGetFiltersAction } from "./actions/get-filters";
 
-// Load news asynchronously
+// Load news asynchronously after set filters
 export const newsLoadEpic = (action$: Observable<any>) =>
   action$.pipe(
     filter(isActionOf(newsLoadAction.request)),
@@ -19,12 +19,12 @@ export const newsLoadEpic = (action$: Observable<any>) =>
   );
 
 // Set filters in local storage
-export const newsLoadSuccessEpic = (action$: Observable<any>) =>
+export const newsSetFiltersEpic = (action$: Observable<any>) =>
   action$.pipe(
-    filter(isActionOf(newsLoadAction.request)),
+    filter(isActionOf(newsSetFiltersAction)),
     map(({ payload }) => {
       NewsService.saveFilters(payload);
-      return newsSetFiltersAction(payload);
+      return newsLoadAction.request(payload);
     })
   );
 
