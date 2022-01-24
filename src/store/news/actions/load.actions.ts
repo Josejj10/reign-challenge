@@ -1,6 +1,6 @@
 import { createAsyncAction, createReducer } from "typesafe-actions";
 import { NewsModel } from "../../../models";
-import { NewsActionTypes, newsInitialState } from "../types";
+import { INewsState, NewsActionTypes, newsInitialState } from "../types";
 
 export const newsLoadAction = createAsyncAction(
   NewsActionTypes.LOAD_NEWS,
@@ -9,16 +9,16 @@ export const newsLoadAction = createAsyncAction(
 )<{ query: string; page: number }, NewsModel[], any>();
 
 export const newsLoadReducer = createReducer(newsInitialState)
-  .handleAction(newsLoadAction.request, (state: any) => ({
+  .handleAction(newsLoadAction.request, (state: INewsState) => ({
     ...state,
     loading: true,
   }))
-  .handleAction(newsLoadAction.success, (state: any, action: any) => ({
+  .handleAction(newsLoadAction.success, (state: INewsState, action: any) => ({
     ...state,
     loading: false,
     news: action.payload,
   }))
-  .handleAction(newsLoadAction.failure, (state: any, action: any) => ({
+  .handleAction(newsLoadAction.failure, (state: INewsState, action: any) => ({
     ...state,
     loading: false,
     error: action.payload,
