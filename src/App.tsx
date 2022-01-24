@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./App.css";
 import Dropdown from "./components/Dropdown/Dropdown";
 import { INewsCardProps } from "./components/NewsCard/NewsCard";
@@ -11,6 +11,7 @@ import {
 } from "./constants/dropdown.constants";
 import Tabs from "./components/Tabs/Tabs";
 import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
+import dayjs from "dayjs";
 
 function App() {
   // Use News Facade
@@ -24,6 +25,9 @@ function App() {
     news,
     page,
     query,
+    getFavorites,
+    toggleFavorite,
+    favorites,
   } = useNews();
 
   // =========
@@ -40,32 +44,40 @@ function App() {
   );
 
   // =========
-  // Effects
+  // Callbacks
   // =========
 
-  // Effect: Log if error
-  useEffect(() => {
-    if (error) console.log(error);
-  }, [error]);
+  const searchFavoriteById = useCallback(
+    (idSearch: string) => {
+      if (favorites[idSearch]) return true;
+      return false;
+    },
+    [favorites]
+  );
 
-  // Effect: Get filters when component is rendered
-  useEffect(() => {
-    getFilters();
-  }, [getFilters]);
+  const setFavoriteNews = useCallback(() => {
+    const favoritesList: NewsModel[] = [];
+    for (const [key, value] of Object.entries(favorites)) {
+      favoritesList.push(value);
+    }
 
-  // Effect: Set filters whenever page or query changes
-  // so this effect will go after getFilters finishes and
-  // retrieves them from Local Storage
-  useEffect(() => {
-    if (query) setFilters({ page, query });
-  }, [loadNews, page, query]);
+    setNewsList(
+      favoritesList
+        .map((newsData) => {
+          return { news: newsData, favorite: true };
+        })
+        .sort(
+          (
+            { news: favoriteA }: { news: NewsModel },
+            { news: favoriteB }: { news: NewsModel }
+          ) => {
+            return dayjs(favoriteB.date).diff(favoriteA.date);
+          }
+        )
+    );
+  }, [favorites]);
 
-  // Effect: Set newsList object
-  // This list is different from the news model class because
-  // its object will have a prop to determine if
-  // its a favorite article or not
-
-  useEffect(() => {
+  const setRegularNews = useCallback(() => {
     // Just in case the API returns more, slice the first 8 elements
     setNewsList(
       news
@@ -79,11 +91,43 @@ function App() {
             newsItem.story_url
           );
         })
-        .map((newsData) => {
-          return { news: newsData, favorite: false };
+        .map((newsData: NewsModel) => {
+          return { news: newsData, favorite: searchFavoriteById(newsData.id) };
         })
     );
-  }, [news]);
+  }, [news, searchFavoriteById]);
+
+  // =========
+  // Effects
+  // =========
+
+  // Effect: Log if error
+  useEffect(() => {
+    if (error) console.log(error);
+  }, [error]);
+
+  // Effect: Get filters and favorites when component is rendered
+  useEffect(() => {
+    getFilters();
+    getFavorites();
+  }, [getFilters, getFavorites]);
+
+  // Effect: Set filters whenever page or query changes
+  // so this effect will go after getFilters finishes and
+  // retrieves them from Local Storage
+  useEffect(() => {
+    if (query) setFilters({ page, query });
+  }, [page, query]);
+
+  // Effect: Set newsList object with favorites or regular news
+  // This list is different from the news model class because
+  // its object will have a prop to determine if
+  // its a favorite article or not
+
+  useEffect(() => {
+    if (viewFavorites) setFavoriteNews();
+    else setRegularNews();
+  }, [viewFavorites, setFavoriteNews, setRegularNews]);
 
   // ===========
   // Functions
@@ -97,6 +141,10 @@ function App() {
 
   const onChangeTab = (value: ETabOptions) => {
     setSelectedTab(value);
+  };
+
+  const toggleFavoriteNews = (value: NewsModel) => {
+    toggleFavorite(value);
   };
 
   return (
@@ -133,7 +181,7 @@ function App() {
             </div>
             <div className="main__content-list">
               {!loading ? (
-                <NewsList list={newsList} />
+                <NewsList list={newsList} toggleFavorite={toggleFavoriteNews} />
               ) : (
                 <div>TODO add loading spinner...</div>
               )}

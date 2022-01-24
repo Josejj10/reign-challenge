@@ -12,13 +12,14 @@ import { useEffect, useState } from "react";
 export interface INewsCardProps {
   news: NewsModel;
   favorite: boolean;
+  toggleFavorite?: (value: NewsModel) => void;
 }
 
-const NewsCard = ({ news, favorite }: INewsCardProps) => {
+const NewsCard = ({ news, favorite, toggleFavorite }: INewsCardProps) => {
   // Simulate the favorite effect,
-  // Should be remove in favor of dispatching an action
+  // Should be removed in favor of dispatching an action
   // to set favorite in local storage
-  const [fav, setFav] = useState(false);
+  const [fav, setFav] = useState(favorite);
 
   useEffect(() => {
     setFav(favorite);
@@ -26,6 +27,7 @@ const NewsCard = ({ news, favorite }: INewsCardProps) => {
 
   const setFavorite = () => {
     setFav((f) => !f);
+    if (toggleFavorite) toggleFavorite(news);
   };
 
   return (

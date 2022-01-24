@@ -1,3 +1,4 @@
+import { waitFor } from "@testing-library/react";
 import { EDropdownOptions } from "../constants/dropdown.constants";
 import { NewsModel } from "../models";
 import { https } from "../utils/https";
@@ -43,5 +44,41 @@ export class NewsService {
     }
     // else, return default values
     return Promise.resolve({ query: EDropdownOptions.ANGULAR, page: 0 });
+  };
+
+  static toggleFavorite = async (favorite: NewsModel) => {
+    const rawFavorites = await StorageService.get("favorites");
+    if (rawFavorites) {
+      const favoritesObject: { [id: string]: NewsModel } = {
+        ...JSON.parse(rawFavorites),
+      };
+
+      // Check if not already in favorites
+      if (!favoritesObject[favorite.id]) {
+        // Add to favorites
+        favoritesObject[favorite.id] = favorite;
+      } else {
+        // Remove from favorites
+        delete favoritesObject[favorite.id];
+      }
+      StorageService.set("favorites", JSON.stringify(favoritesObject));
+    } else {
+      // First time adding a favorite
+      const favoritesObject: { [id: string]: NewsModel } = {
+        [favorite.id]: favorite,
+      };
+      StorageService.set("favorites", JSON.stringify(favoritesObject));
+    }
+  };
+
+  static getFavorites = async (): Promise<{
+    [id: string]: NewsModel;
+  }> => {
+    const rawFavorites = await StorageService.get("favorites");
+    if (rawFavorites) {
+      return Promise.resolve({ ...JSON.parse(rawFavorites) });
+    }
+    // else, return default value
+    return Promise.resolve({});
   };
 }
