@@ -3,6 +3,7 @@
   width: fit-content;
   user-select: none;
   -webkit-user-select: none;
+  padding: 0;
 }
 
 .Tabs__option {

@@ -1,10 +1,9 @@
-import { waitFor } from "@testing-library/react";
 import { EDropdownOptions } from "../constants/dropdown.constants";
 import { NewsModel } from "../models";
 import { https } from "../utils/https";
 import { StorageService } from "./storage.service";
 
-const HITS_PER_PAGE = "8";
+const HITS_PER_PAGE = "20";
 export class NewsService {
   // Using the HackerNews API
   // https://hn.algolia.com/api
@@ -18,7 +17,7 @@ export class NewsService {
       page: number;
     },
     persistFilters = false
-  ): Promise<NewsModel[]> => {
+  ): Promise<{ news: NewsModel[]; maxPages: number }> => {
     const params = new URLSearchParams();
     params.append("query", query);
     params.append("page", page.toString());
@@ -29,11 +28,13 @@ export class NewsService {
 
     const newsList = rawNews.hits.map((news: any) => new NewsModel(news));
 
+    const maxPages = rawNews.nbPages;
+
     if (persistFilters) {
       this.saveFilters({ query, page });
     }
 
-    return Promise.resolve(newsList);
+    return Promise.resolve({ news: newsList, maxPages });
   };
 
   static saveFilters = (filters: { query: string; page: number }) => {

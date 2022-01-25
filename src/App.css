@@ -40,7 +40,7 @@ main {
   width: 100%;
   max-width: 1440px;
   margin: auto;
-  grid-template-rows: 0.5fr 108px minmax(450px, auto) 1fr;
+  grid-template-rows: 0.5fr 188px minmax(450px, auto) 1fr;
   grid-template-columns: 1fr;
   padding: 0 var(--lateral-margin);
 }
@@ -52,7 +52,7 @@ main {
 }
 
 .main__content-tabs {
-  padding-bottom: 25px;
+  padding-bottom: 5px;
 }
 
 .main__content-dropdown {
@@ -65,47 +65,46 @@ main {
 .main__content-dropdown .pagination {
   display: flex;
   align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
 }
 
-.main__content-dropdown .pagination p {
+.main__content-dropdown .pagination-information {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main__content-dropdown .pagination-information p {
   color: var(--text-color-regular);
+  margin: 0;
+  margin-bottom: 5px;
 }
 
-.main__content-dropdown .pagination button {
-  background-color: var(--foreground-color);
-  border: 1px solid var(--border-color-light);
-  border-radius: 4px;
-  color: var(--text-color-regular);
-  cursor: pointer;
-  height: var(--dropdown-height);
-  padding: 0 16px;
-  user-select: none;
-  -webkit-user-select: none;
-  margin-left: 10px;
-  transition: 0.1s ease-out;
-}
-
-.main__content-dropdown .pagination button:hover {
-  background-color: var(--pagination-color-selected);
-  box-shadow: rgba(0, 0, 0, 0.1) 0 1px 1px;
-  color: var(--pagination-text-color-selected);
-}
-
-.main__content-dropdown .pagination button:focus {
-  border-color: var(--border-color-selected);
-  outline: none;
-}
-
-.main__content-list {
-}
-
-.main__content-pagination {
-  align-items: flex-end;
+.main__content-dropdown .pagination-information:first-child {
+  margin-top: 5px;
 }
 
 /* For desktop: */
 @media only screen and (min-width: 768px) {
+  .main__content {
+    grid-template-rows: 0.5fr 108px minmax(450px, auto) 1fr;
+  }
+
+  .main__content-tabs {
+    padding-bottom: 25px;
+  }
+
   .main__content-dropdown {
     flex-direction: row;
+  }
+
+  .main__content-dropdown .pagination {
+    flex-direction: row;
+  }
+
+  .main__content-dropdown .pagination-information {
+    flex-direction: row;
+    align-items: flex-end;
   }
 }
