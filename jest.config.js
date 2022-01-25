@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   preset: "vite-jest",
 
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.js"],
