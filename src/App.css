@@ -40,7 +40,7 @@ main {
   width: 100%;
   max-width: 1440px;
   margin: auto;
-  grid-template-rows: 0.5fr 108px minmax(450px, auto) 1fr;
+  grid-template-rows: 0.5fr 138px minmax(450px, auto) 1fr;
   grid-template-columns: 1fr;
   padding: 0 var(--lateral-margin);
 }
@@ -58,7 +58,7 @@ main {
 .main__content-dropdown {
   padding: 38px 0;
   justify-content: space-between !important;
-  flex-direction: column;
+  flex-direction: column-reverse;
   align-items: center;
 }
 
@@ -105,6 +105,10 @@ main {
 
 /* For desktop: */
 @media only screen and (min-width: 768px) {
+  .main__content {
+    grid-template-rows: 0.5fr 108px minmax(450px, auto) 1fr;
+  }
+
   .main__content-dropdown {
     flex-direction: row;
   }
