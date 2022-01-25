@@ -74,7 +74,7 @@ export const newsToggleFavoriteEpic = (action$: Observable<any>) =>
     switchMap(({ payload }) =>
       from(NewsService.toggleFavorite(payload)).pipe(
         map(newsGetFavoritesAction.request),
-        catchError((error) => of(EMPTY))
+        catchError(() => of(EMPTY))
       )
     )
   );

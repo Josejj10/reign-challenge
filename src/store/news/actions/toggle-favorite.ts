@@ -8,9 +8,6 @@ export const newsToggleFavoriteAction = createAction(
 
 export const newsToggleFavoriteReducer = createReducer(
   newsInitialState
-).handleAction(
-  newsToggleFavoriteAction,
-  (state: INewsState, action: { payload: NewsModel }) => ({
-    ...state,
-  })
-);
+).handleAction(newsToggleFavoriteAction, (state: INewsState) => ({
+  ...state,
+}));
