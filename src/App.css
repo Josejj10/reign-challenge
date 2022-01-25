@@ -107,4 +107,8 @@ main {
     flex-direction: row;
     align-items: flex-end;
   }
+
+  .main__content-dropdown .pagination-information p {
+    margin-right: 10px;
+  }
 }
