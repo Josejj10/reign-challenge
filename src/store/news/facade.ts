@@ -4,18 +4,25 @@ import { NewsModel } from "../../models";
 import { IState } from "../reducers";
 import { newsGetFavoritesAction } from "./actions/get-favorites";
 import { newsGetFiltersAction } from "./actions/get-filters";
+import { newsInfiniteScrollAction } from "./actions/infinite-scroll.actions";
 import { newsLoadAction } from "./actions/load.actions";
 import { newsSetFiltersAction } from "./actions/set-filters";
 import { newsToggleFavoriteAction } from "./actions/toggle-favorite";
 
 export const useNews = () => {
-  const { news, loading, loadingFilters, error, page, query, favorites } =
+  const { news, loading, filtersLoaded, error, page, query, favorites } =
     useSelector((state: IState) => state.news);
   const dispatch = useDispatch();
 
   const loadNews = useCallback(
     (data: { page: number; query: string }) =>
       dispatch(newsLoadAction.request(data)),
+    [dispatch]
+  );
+
+  const loadInfinite = useCallback(
+    (data: { page: number; query: string }) =>
+      dispatch(newsInfiniteScrollAction.request(data)),
     [dispatch]
   );
 
@@ -43,11 +50,12 @@ export const useNews = () => {
   return {
     news,
     loadNews,
+    loadInfinite,
     loading,
     error,
     getFilters,
     setFilters,
-    loadingFilters,
+    filtersLoaded,
     page,
     query,
     getFavorites,

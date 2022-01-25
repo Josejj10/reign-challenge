@@ -4,26 +4,34 @@ import { NewsModel } from "../models";
 import { https } from "../utils/https";
 import { StorageService } from "./storage.service";
 
+const HITS_PER_PAGE = "8";
 export class NewsService {
   // Using the HackerNews API
   // https://hn.algolia.com/api
 
-  static getNews = async ({
-    query,
-    page,
-  }: {
-    query: string;
-    page: number;
-  }): Promise<NewsModel[]> => {
+  static getNews = async (
+    {
+      query,
+      page,
+    }: {
+      query: string;
+      page: number;
+    },
+    persistFilters = false
+  ): Promise<NewsModel[]> => {
     const params = new URLSearchParams();
     params.append("query", query);
     params.append("page", page.toString());
     // To only get 8 news per page
-    params.append("hitsPerPage", "8");
+    params.append("hitsPerPage", HITS_PER_PAGE);
 
     const rawNews = (await https.get("/search_by_date", { params })) as any;
 
     const newsList = rawNews.hits.map((news: any) => new NewsModel(news));
+
+    if (persistFilters) {
+      this.saveFilters({ query, page });
+    }
 
     return Promise.resolve(newsList);
   };

@@ -61,6 +61,7 @@
   min-width: var(--card-favorite-size);
   border-radius: 0 var(--card-border-radius) var(--card-border-radius) 0;
   user-select: none;
+  -webkit-user-select: none;
   background-color: var(--foreground-color-light);
   justify-self: flex-end;
 }

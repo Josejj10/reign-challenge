@@ -21,7 +21,7 @@ function App() {
     setFilters,
     error,
     loading,
-    loadingFilters,
+    filtersLoaded,
     news,
     page,
     query,
@@ -78,22 +78,24 @@ function App() {
   }, [favorites]);
 
   const setRegularNews = useCallback(() => {
+    const filteredNews = news.filter((newsItem: NewsModel) => {
+      // Discard data if any of the attributes aren't present
+      return (
+        newsItem.author &&
+        newsItem.created_at &&
+        newsItem.story_title &&
+        newsItem.story_url
+      );
+    });
+
+    if (filteredNews.length === 0) {
+      return;
+    }
     // Just in case the API returns more, slice the first 8 elements
     setNewsList(
-      news
-        .slice(0, 8)
-        .filter((newsItem: NewsModel) => {
-          // Discard data if any of the attributes aren't present
-          return (
-            newsItem.author &&
-            newsItem.created_at &&
-            newsItem.story_title &&
-            newsItem.story_url
-          );
-        })
-        .map((newsData: NewsModel) => {
-          return { news: newsData, favorite: searchFavoriteById(newsData.id) };
-        })
+      filteredNews.map((newsData: NewsModel) => {
+        return { news: newsData, favorite: searchFavoriteById(newsData.id) };
+      })
     );
   }, [news, searchFavoriteById]);
 
@@ -101,23 +103,23 @@ function App() {
   // Effects
   // =========
 
-  // Effect: Log if error
-  useEffect(() => {
-    if (error) console.log(error);
-  }, [error]);
-
   // Effect: Get filters and favorites when component is rendered
   useEffect(() => {
     getFilters();
     getFavorites();
   }, [getFilters, getFavorites]);
 
-  // Effect: Set filters whenever page or query changes
-  // so this effect will go after getFilters finishes and
-  // retrieves them from Local Storage
+  // Effect: Log if error
   useEffect(() => {
-    if (query) setFilters({ page, query });
-  }, [page, query]);
+    if (error) console.log(error);
+  }, [error]);
+
+  // Effect: Load news from filters
+  useEffect(() => {
+    if (query && filtersLoaded) {
+      setFilters({ query, page });
+    }
+  }, [query, page]);
 
   // Effect: Set newsList object with favorites or regular news
   // This list is different from the news model class because
@@ -136,7 +138,8 @@ function App() {
   // Set in Local Storage and then call the API
   // (see: newsSetFiltersEpic)
   const onChangeQuery = (value: EDropdownOptions) => {
-    if (query) setFilters({ page, query: value });
+    // Page 0 when changing query to load latest news
+    setFilters({ page: 0, query: value });
   };
 
   const onChangeTab = (value: ETabOptions) => {
@@ -147,6 +150,10 @@ function App() {
     toggleFavorite(value);
   };
 
+  const restartPage = () => {
+    setFilters({ page: 0, query });
+  };
+
   return (
     <div className="App">
       <header>
@@ -155,42 +162,41 @@ function App() {
         </div>
       </header>
       <main>
-        {loadingFilters ? (
-          <div>Loading filters...</div>
-        ) : (
-          <div
-            className={`main__content ${
-              viewFavorites ? " main__content-favorites" : ""
-            }`}
-          >
-            <div className="main__content-tabs">
-              <Tabs
-                list={tabsOptionList}
-                selectedValue={selectedTab}
-                onChange={onChangeTab}
-              />
-            </div>
-            <div className="main__content-dropdown">
-              {!viewFavorites && (
+        <div
+          className={`main__content ${
+            viewFavorites ? " main__content-favorites" : ""
+          }`}
+        >
+          <div className="main__content-tabs">
+            <Tabs
+              list={tabsOptionList}
+              selectedValue={selectedTab}
+              onChange={onChangeTab}
+            />
+          </div>
+          <div className="main__content-dropdown">
+            {!viewFavorites && (
+              <>
                 <Dropdown
                   list={dropdownOptionList}
                   selectedValue={query}
                   onChange={onChangeQuery}
                 />
-              )}
-            </div>
-            <div className="main__content-list">
-              {!loading ? (
-                <NewsList list={newsList} toggleFavorite={toggleFavoriteNews} />
-              ) : (
-                <div>TODO add loading spinner...</div>
-              )}
-            </div>
-            <div className="main__content-pagination">
-              <div>Pagination</div>
-            </div>
+                <div className="pagination">
+                  <p>Page {page + 1}</p>
+                  {page > 0 && (
+                    <button onClick={restartPage}>
+                      Load again from first page
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
-        )}
+          <div className="main__content-list">
+            <NewsList list={newsList} toggleFavorite={toggleFavoriteNews} />
+          </div>
+        </div>
       </main>
     </div>
   );

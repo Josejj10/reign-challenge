@@ -16,5 +16,6 @@ export const newsSetFiltersReducer = createReducer(
   ) => ({
     ...state,
     ...action.payload, // spreads action props (query, page) to state
+    filtersLoaded: false,
   })
 );

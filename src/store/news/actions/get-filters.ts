@@ -10,7 +10,7 @@ export const newsGetFiltersAction = createAsyncAction(
 export const newsGetFiltersReducer = createReducer(newsInitialState)
   .handleAction(newsGetFiltersAction.request, (state: INewsState) => ({
     ...state,
-    loadingFilters: true,
+    filtersLoaded: true,
   }))
   .handleAction(
     newsGetFiltersAction.success,
@@ -19,7 +19,6 @@ export const newsGetFiltersReducer = createReducer(newsInitialState)
       action: { payload: { query: string; page: number } }
     ) => ({
       ...state,
-      loadingFilters: false,
       ...action.payload, // spreads action props (query, page) to state
     })
   )
@@ -27,7 +26,6 @@ export const newsGetFiltersReducer = createReducer(newsInitialState)
     newsGetFiltersAction.failure,
     (state: INewsState, action: any) => ({
       ...state,
-      loadingFilters: false,
       error: action.payload,
     })
   );
