@@ -2,6 +2,7 @@
   position: relative;
   width: var(--dropdown-width);
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .Dropdown__header {

@@ -2,6 +2,7 @@ import reduceReducers from "reduce-reducers";
 import { combineEpics } from "redux-observable";
 import { newsGetFavoritesReducer } from "./actions/get-favorites";
 import { newsGetFiltersReducer } from "./actions/get-filters";
+import { newsInfiniteScrollReducer } from "./actions/infinite-scroll.actions";
 import { newsLoadReducer } from "./actions/load.actions";
 import { newsSetFiltersReducer } from "./actions/set-filters";
 import { newsToggleFavoriteReducer } from "./actions/toggle-favorite";
@@ -16,5 +17,6 @@ export const NewsReducer = reduceReducers(
   newsGetFiltersReducer,
   newsSetFiltersReducer,
   newsGetFavoritesReducer,
-  newsToggleFavoriteReducer
+  newsToggleFavoriteReducer,
+  newsInfiniteScrollReducer
 );

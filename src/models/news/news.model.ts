@@ -12,8 +12,15 @@ export class NewsModel {
   created_at: string;
   date: Dayjs;
 
-  constructor({ author, story_title, story_url, created_at, objectID }: any) {
-    this.id = objectID;
+  constructor({
+    author,
+    story_title,
+    story_url,
+    created_at,
+    story_id,
+    objectID,
+  }: any) {
+    this.id = `${story_id} ${objectID}`;
     this.author = author;
     this.story_title = story_title;
     this.story_url = story_url;

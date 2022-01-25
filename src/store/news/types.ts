@@ -5,6 +5,10 @@ export enum NewsActionTypes {
   LOAD_NEWS_SUCCESS = "[NEWS] Load Success",
   LOAD_NEWS_FAIL = "[NEWS] Load Fail",
 
+  INFINITE_SCROLL_NEWS = "[NEWS] Infinite scroll ",
+  INFINITE_SCROLL_NEWS_SUCCESS = "[NEWS] Infinite scroll Success",
+  INFINITE_SCROLL_NEWS_FAIL = "[NEWS] Infinite scroll Fail",
+
   SET_FILTERS = "[NEWS] Set filters",
 
   GET_FILTERS = "[NEWS] Get filters",
@@ -22,7 +26,7 @@ export interface INewsState {
   news: NewsModel[];
   favorites: { [id: string]: NewsModel };
   loading: boolean;
-  loadingFilters: boolean;
+  filtersLoaded: boolean;
   error: any;
   query: string;
   page: number;
@@ -32,7 +36,7 @@ export const newsInitialState = {
   news: [],
   favorites: {},
   loading: false,
-  loadingFilters: false,
+  filtersLoaded: false,
   error: null,
   query: "",
   page: 0,
