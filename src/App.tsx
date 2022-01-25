@@ -12,15 +12,14 @@ import {
 import Tabs from "./components/Tabs/Tabs";
 import { ETabOptions, tabsOptionList } from "./constants/tabs.constants";
 import dayjs from "dayjs";
+import Button from "./components/Button/Button";
 
 function App() {
   // Use News Facade
   const {
-    loadNews,
     getFilters,
     setFilters,
     error,
-    loading,
     filtersLoaded,
     news,
     page,
@@ -36,6 +35,7 @@ function App() {
 
   // Component State
   const [newsList, setNewsList] = useState<INewsCardProps[]>([]);
+  const [initialPage, setInitialPage] = useState(0);
   const [selectedTab, setSelectedTab] = useState(ETabOptions.ALL);
   // Memoize view favorites to change when selected tab changes
   const viewFavorites = useMemo(
@@ -118,6 +118,7 @@ function App() {
   useEffect(() => {
     if (query && filtersLoaded) {
       setFilters({ query, page });
+      setInitialPage(page);
     }
   }, [query, page]);
 
@@ -183,18 +184,32 @@ function App() {
                   onChange={onChangeQuery}
                 />
                 <div className="pagination">
-                  <p>Page {page + 1}</p>
+                  <div className="pagination-information">
+                    <p>
+                      Current page loaded: <strong>{page + 1}</strong>
+                    </p>
+                    <p>
+                      Initial page loaded from Local Storage:{" "}
+                      <strong>{initialPage + 1}</strong>
+                    </p>
+                  </div>
                   {page > 0 && (
-                    <button onClick={restartPage}>
-                      Load again from first page
-                    </button>
+                    <Button
+                      text="Load again from first page"
+                      onClick={restartPage}
+                    />
                   )}
                 </div>
               </>
             )}
           </div>
           <div className="main__content-list">
-            <NewsList list={newsList} toggleFavorite={toggleFavoriteNews} />
+            <NewsList
+              list={newsList}
+              toggleFavorite={toggleFavoriteNews}
+              viewFavorites={viewFavorites}
+              restartPage={restartPage}
+            />
           </div>
         </div>
       </main>

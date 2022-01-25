@@ -10,8 +10,16 @@ import { newsSetFiltersAction } from "./actions/set-filters";
 import { newsToggleFavoriteAction } from "./actions/toggle-favorite";
 
 export const useNews = () => {
-  const { news, loading, filtersLoaded, error, page, query, favorites } =
-    useSelector((state: IState) => state.news);
+  const {
+    news,
+    loading,
+    filtersLoaded,
+    error,
+    page,
+    query,
+    favorites,
+    maxPages,
+  } = useSelector((state: IState) => state.news);
   const dispatch = useDispatch();
 
   const loadNews = useCallback(
@@ -61,5 +69,6 @@ export const useNews = () => {
     getFavorites,
     toggleFavorite,
     favorites,
+    maxPages,
   };
 };

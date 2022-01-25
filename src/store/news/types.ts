@@ -30,6 +30,7 @@ export interface INewsState {
   error: any;
   query: string;
   page: number;
+  maxPages: number;
 }
 
 export const newsInitialState = {
@@ -40,4 +41,5 @@ export const newsInitialState = {
   error: null,
   query: "",
   page: 0,
+  maxPages: 50,
 };

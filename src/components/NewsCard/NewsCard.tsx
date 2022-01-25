@@ -16,9 +16,6 @@ export interface INewsCardProps {
 }
 
 const NewsCard = ({ news, favorite, toggleFavorite }: INewsCardProps) => {
-  // Simulate the favorite effect,
-  // Should be removed in favor of dispatching an action
-  // to set favorite in local storage
   const [fav, setFav] = useState(favorite);
 
   useEffect(() => {
