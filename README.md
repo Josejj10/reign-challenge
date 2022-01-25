@@ -90,7 +90,11 @@ I added some animations and transitions (button, news-card, opacity, toggling fa
 
 ### Redux
 
-Is it overkill for such a little App? Of course it is! Nevertheless, and as I've mentioned before, I chose to use this in order to showcase a bit of what I know about state containers and reactive programming. I also used the facade design pattern, creating a hook to make the actions to be dispatched and variables in store easy to access.
+Is it overkill for such a little app? Of course it is! Nevertheless, and as I've mentioned before, I chose to use this in order to showcase a bit of what I know about state containers and reactive programming. I also used the facade design pattern, creating a hook to make the actions to be dispatched and variables in store easy to access.
+
+### Infinite scrolling
+
+The app has infinite scrolling implemented, and I also added a button to load again from the first page, and some text to show the current page loaded and the initial page number that was saved in local storage. Usually infinite scrolling should be used with a tool like react-window or react-virtualized to avoid having a big number of items rendered at the same time, and it might be a good idea to add it to this project as a future feature.
 
 ---
 
